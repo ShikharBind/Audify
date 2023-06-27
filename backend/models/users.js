@@ -11,8 +11,20 @@ const userModel = new Schema(
       type: String,
       required: true,
     },
+    userID: {
+      type: String,
+      required: true,
+    },
+    email_verified: {
+      type: Boolean,
+      required: true,
+    },
+    auth_time: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("user", userModel);
+module.exports = mongoose.model("users", userModel);
