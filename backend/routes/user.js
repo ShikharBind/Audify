@@ -65,6 +65,9 @@ router.post("/login", async (req, res) => {
       newUserData(decodeValue, req, res);
     }
   } catch (e) {
+    if(e.code==="auth/id-token-expired"){
+      console.log('token expired');
+    }
     return res.status(500).send({ success: false, message: e });
   }
 });
