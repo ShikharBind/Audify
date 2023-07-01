@@ -3,7 +3,7 @@ const users = require("../models/user");
 const authController = require("./authController");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    return cb(null, "./uploads");
+    return cb(null, `./uploads/${req.currentUser.user_id}`);
   },
   filename: function (req, file, cb) {
     cb(null, `${Date.now().toString()}-${file.originalname}`);

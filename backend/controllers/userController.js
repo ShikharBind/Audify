@@ -1,6 +1,8 @@
 const users = require("../models/user");
+const functions = require("../utils/functions");
 
 const newUserData = async (decodeValue, req, res) => {
+  functions.createFolder('./uploads/'+decodeValue.user_id)
   const newUser = new users({
     name: decodeValue.email.split("@")[0],
     email: decodeValue.email,
@@ -57,5 +59,7 @@ const checkAndUpdateUser= async (req, res) => {
 }
 
 module.exports = {
-  checkAndUpdateUser
+  checkAndUpdateUser,
+  newUserData,
+  updateUserData
 };

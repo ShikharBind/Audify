@@ -16,6 +16,7 @@ const userRoute = require("./routes/userRoutes");
 const mediaController = require("./controllers/mediaController");
 const fileController = require("./controllers/fileController");
 const authController = require("./controllers/authController");
+const userController = require("./controllers/userController");
 
 const functions = require('./utils/functions');
 
@@ -36,7 +37,6 @@ app.use(async (req, res, next) => {
   console.log("out use");
 });
 
-console.log(functions.getAudioFilePath('/uploads/1688234602585-sample-mp4-file-small.mp4'));
 app.use("/", userRoute);
 
 app.listen(PORT, () => {
