@@ -41,6 +41,7 @@ const convertVideoToAudio = (videoFilePath, audioFilePath) => {
 
 const streamAudio =(req, res, audioFilePath)=>{
  try {
+  console.log("playing audio"+audioFilePath);
    const stat = fs.statSync(audioFilePath);
  
    res.setHeader('Content-Type', 'audio/mpeg');

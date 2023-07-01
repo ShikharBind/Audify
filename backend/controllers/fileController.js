@@ -35,12 +35,19 @@ const uploadToDB = async (req, res) => {
     videoFilePath: req.file.path,
   };
   const filter = { userID: req.currentUser.user_id };
+  var response;
   try {
    await users.findOne(filter).then((user) => {
-      user.files.push(file);
-      user.save();
-      console.log("File saved for user:", user);
-    });
+    user.files.push(file);
+     return user.save();
+      
+    }).then((updatedUser) =>{
+      console.log("File saved for user:", updatedUser);
+      const newFileId = updatedUser.files[updatedUser.files.length-1]._id;
+      console.log('New file ID:', newFileId);
+      response= newFileId;
+    })
+    return response;
   } catch (error) {
     console.error("Error saving user:", error);
   }
@@ -64,7 +71,7 @@ const getSingleFile = async (req, res) => {
     var result;
     await users.findOne(filter).then((user) => {
       user.files.forEach((file) => {
-        if(file.id===req.body.id){
+        if(file.id===req.params.id){
           console.log(file);        
           result= file;
         }
@@ -78,13 +85,13 @@ const getSingleFile = async (req, res) => {
 }
 
 const updateFile = (req,res,file)=>{
-  users.updateOne({userID:req.currentUser.user_id,'files._id':req.body.id},{
+  users.updateOne({userID:req.currentUser.user_id,'files._id':req.params.id},{
     $set:{
       "files.$":file
     }
   }).then((result)=>{
     console.log(result);
-    res.send(result);
+    // res.send(result);
   }).catch((err)=>{
     console.error('Update failed:', err);
   })

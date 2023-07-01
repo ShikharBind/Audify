@@ -3,24 +3,26 @@ const userController = require("../controllers/userController");
 const fileController = require("../controllers/fileController");
 const mediaController = require("../controllers/mediaController");
 const functions =require("../utils/functions");
-router.post('/',(req, res) => {
-    mediaController.streamAudio(req, res,'./files/file_example_MP3_1MG.mp3');
-})
+// router.get('/:id',(req, res) => {
+//     console.log(req.params);
+//     mediaController.streamAudio(req, res,'./files/file_example_MP3_1MG.mp3');
+// })
 
 router.post("/login", async (req, res) => {
     userController.checkAndUpdateUser(req, res);
 });
 
 router.post("/upload",fileController.upload.single('video'), (req, res) => {
-    console.log(req.body);
     console.log(req.file);
     console.log(req.file.path);
     console.log("uploading...");
-    fileController.uploadToDB(req,res);
-    return res.redirect("/");
+    fileController.uploadToDB(req,res).then((result) => {
+        return res.send({id:result});
+    })
+   
   }),
 
-  router.post("/convert", async (req, res) => {
+  router.post("/:id/convert", async (req, res) => {
     console.log("in convert");
    const file = await fileController.getSingleFile(req, res);
    const audioFilePath =functions.getAudioFilePath(file.videoFilePath);
