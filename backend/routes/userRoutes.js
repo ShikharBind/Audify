@@ -42,4 +42,8 @@ router.post("/upload",fileController.upload.single('video'), (req, res) => {
     res.send(file);
   })
 
+  router.post('/delete/:id', async (req, res) => {
+    fileController.deleteFile(req, res);
+  })
+
 module.exports = router;
