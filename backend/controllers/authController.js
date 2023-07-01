@@ -31,6 +31,7 @@ const verifyIdToken = async (req, res)=>{
         if(e.code==="auth/id-token-expired"){
           console.log('token expired');
         }
+        console.log("in auth catch", e);
         return res.status(500).send({ success: false, message: e });
       }
 }
