@@ -55,10 +55,12 @@ const uploadToDB = async (req, res) => {
 
 const getAllFiles = async (req, res) => {
   const filter = { userID: req.currentUser.user_id };
+  var response;
   try {
    await users.findOne(filter).then((user) => {
-      res.json(user.files);
+      response =user.files;
     });
+    return response;
   } catch (error) {
     res.send(error);
     console.error("Error :", error);

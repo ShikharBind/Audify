@@ -17,12 +17,12 @@ router.post("/upload",fileController.upload.single('video'), (req, res) => {
     console.log(req.file.path);
     console.log("uploading...");
     fileController.uploadToDB(req,res).then((result) => {
-        return res.send({id:result});
+        res.send({id:result});
     })
    
   }),
 
-  router.post("/:id/convert", async (req, res) => {
+  router.post("/convert/:id", async (req, res) => {
     console.log("in convert");
    const file = await fileController.getSingleFile(req, res);
    const audioFilePath =functions.getAudioFilePath(file.videoFilePath);
@@ -32,8 +32,14 @@ router.post("/upload",fileController.upload.single('video'), (req, res) => {
     mediaController.streamAudio(req, res, audioFilePath);
   })
 
-  router.get('/view-all', (req, res) => {
-    fileController.getAllFiles(req, res);
+  router.get('/view-all', async (req, res) => {
+   const files = await fileController.getAllFiles(req, res);
+   res.json(files);
+  })
+
+  router.get('/view/:id', async (req, res) => {
+   const file= await fileController.getSingleFile(req, res);
+    res.send(file);
   })
 
 module.exports = router;
