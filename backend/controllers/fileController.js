@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
     return cb(null, "./uploads");
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now().toString() + "-" + file.originalname);
+    cb(null, `${Date.now().toString()}-${file.originalname}`);
   },
 });
 
@@ -30,20 +30,57 @@ const upload = multer({
   },
 });
 
-const uploadToDB = (req, res) => {
+const uploadToDB = async (req, res) => {
   const file = {
     videoFilePath: req.file.path,
   };
   const filter = { userID: req.currentUser.user_id };
- try {
-   users.findOne(filter).then((user) => {
-    user.files.push(file);
-     user.save();
+  try {
+   await users.findOne(filter).then((user) => {
+      user.files.push(file);
+      user.save();
       console.log("File saved for user:", user);
-   });
- } catch (error) {
-  console.error("Error saving user:", error);
- }
+    });
+  } catch (error) {
+    console.error("Error saving user:", error);
+  }
 };
 
-module.exports = { upload, uploadToDB };
+const getAllFiles = async (req, res) => {
+  const filter = { userID: req.currentUser.user_id };
+  try {
+   await users.findOne(filter).then((user) => {
+      res.json(user.files);
+    });
+  } catch (error) {
+    res.send(error);
+    console.error("Error :", error);
+  }
+};
+
+const getSingleFile = async (req, res) => {
+  const filter = { userID: req.currentUser.user_id };
+  try {
+    var result;
+    await users.findOne(filter).then((user) => {
+      user.files.forEach((file) => {
+        if(file.id===req.body.id){
+          console.log(file);        
+          result= file;
+        }
+      })
+    });
+    return result;
+  } catch (error) {
+    res.send(error);
+    console.error("Error :", error);
+  }
+}
+
+const updateFile = (req,res,file)=>{
+
+}
+
+
+
+module.exports = { upload, uploadToDB ,getAllFiles,getSingleFile};

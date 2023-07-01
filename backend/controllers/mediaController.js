@@ -25,13 +25,11 @@ const convertVideoToAudio = (videoFilePath, audioFilePath) => {
       .output(audioFilePath)
       .noVideo()
       .audioCodec("libmp3lame")
-      .on("end", () => {
+      .on("end", (callback) => {
         console.log("Conversion complete");
-        callback(null);
       })
       .on("error", (error) => {
         console.error("Error:", error);
-        callback(error);
       })
       .run();
     console.log("Conversion complete");

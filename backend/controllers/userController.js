@@ -41,14 +41,19 @@ const updateUserData = async (decodeValue, req, res) => {
 const checkAndUpdateUser= async (req, res) => {
    // checking if user already exists
    const decodeValue = req.currentUser;
-   const userExists = await users.findOne({ userID: decodeValue.user_id });
+  try {
+     const userExists = await users.findOne({ userID: decodeValue.user_id });
+      
+     if (userExists) {
+       updateUserData(decodeValue, req, res);
+     } else {
+       // res.send(decodeValue);
+       newUserData(decodeValue, req, res);
+     }
+  } catch (error) {
+    console.log(error);
     
-   if (userExists) {
-     updateUserData(decodeValue, req, res);
-   } else {
-     // res.send(decodeValue);
-     newUserData(decodeValue, req, res);
-   }
+  }
 }
 
 module.exports = {

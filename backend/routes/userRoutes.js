@@ -1,7 +1,11 @@
 const router = require("express").Router();
 const userController = require("../controllers/userController");
 const fileController = require("../controllers/fileController");
-
+const mediaController = require("../controllers/mediaController");
+const functions =require("../utils/functions");
+router.post('/',(req, res) => {
+    mediaController.streamAudio(req, res,'./files/file_example_MP3_1MG.mp3');
+})
 
 router.post("/login", async (req, res) => {
     userController.checkAndUpdateUser(req, res);
@@ -15,5 +19,17 @@ router.post("/upload",fileController.upload.single('video'), (req, res) => {
     fileController.uploadToDB(req,res);
     return res.redirect("/");
   }),
+
+  router.post("/convert", async (req, res) => {
+    console.log("in convert");
+   const file = await fileController.getSingleFile(req, res);
+   const audioFilePath =functions.getAudioFilePath(file.videoFilePath);
+   mediaController.convertVideoToAudio(file.videoFilePath, audioFilePath);
+    mediaController.streamAudio(req, res, audioFilePath);
+  })
+
+  router.get('/view-all', (req, res) => {
+    fileController.getAllFiles(req, res);
+  })
 
 module.exports = router;
