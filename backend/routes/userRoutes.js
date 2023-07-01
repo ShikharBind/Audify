@@ -1,9 +1,9 @@
 const router = require("express").Router();
-const authController = require("../controllers/authController");
+const userController = require("../controllers/userController");
 
 
 router.post("/login", async (req, res) => {
- authController.verifyIdToken(req,res);
+    userController.checkAndUpdateUser(req, res);
 });
 
 module.exports = router;

@@ -7,6 +7,7 @@ const newUserData = async (decodeValue, req, res) => {
     userID: decodeValue.user_id,
     email_verified: decodeValue.email_verified,
     auth_time: decodeValue.auth_time,
+    files:[]
   });
   try {
     console.log("here");
@@ -37,7 +38,19 @@ const updateUserData = async (decodeValue, req, res) => {
   }
 };
 
+const checkAndUpdateUser= async (req, res) => {
+   // checking if user already exists
+   const decodeValue = req.currentUser;
+   const userExists = await users.findOne({ userID: decodeValue.user_id });
+    
+   if (userExists) {
+     updateUserData(decodeValue, req, res);
+   } else {
+     // res.send(decodeValue);
+     newUserData(decodeValue, req, res);
+   }
+}
+
 module.exports = {
-  newUserData,
-  updateUserData,
+  checkAndUpdateUser
 };

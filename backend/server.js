@@ -14,6 +14,7 @@ const app = express();
 const userRoute = require("./routes/userRoutes");
 const mediaController = require("./controllers/mediaController");
 const fileController = require("./controllers/fileController");
+const authController = require("./controllers/authController");
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -26,8 +27,6 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
-
-
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -40,6 +39,19 @@ mongoose
     console.log(e);
   });
 
+// let currentUser;
+app.use(async (req,res,next) => {
+  console.log("in use");
+ req.currentUser= await authController.verifyIdToken(req,res);
+ console.log(req.currentUser);
+  next();
+  console.log("out use");
+})
+
+
+
+
+
 
 //   home
 app.get("/", (req, res) => {
@@ -51,9 +63,11 @@ app.get("/", (req, res) => {
 app.post("/upload",fileController.upload.single('video'), (req, res) => {
   console.log(req.body);
   console.log(req.file);
-
+  console.log(req.file.path);
+  console.log("uploading...");
+  fileController.uploadToDB(req,res);
   return res.redirect("/");
-})
+}),
 
 //   user authentication
 app.use("/user/", userRoute);

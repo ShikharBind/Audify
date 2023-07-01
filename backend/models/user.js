@@ -22,7 +22,21 @@ const userModel = new Schema(
     auth_time: {
       type: String,
       required: true,
-    }
+    },
+    files:[
+      {
+        filename:{
+          type: String,
+        },
+        videoFilePath:{
+          type: String,
+          required: true
+        },
+        audioFilePath: {
+          type: String,
+        },
+      }
+    ]
   },
   { timestamps: true }
 );
