@@ -78,9 +78,18 @@ const getSingleFile = async (req, res) => {
 }
 
 const updateFile = (req,res,file)=>{
-
+  users.updateOne({userID:req.currentUser.user_id,'files._id':req.body.id},{
+    $set:{
+      "files.$":file
+    }
+  }).then((result)=>{
+    console.log(result);
+    res.send(result);
+  }).catch((err)=>{
+    console.error('Update failed:', err);
+  })
 }
 
 
 
-module.exports = { upload, uploadToDB ,getAllFiles,getSingleFile};
+module.exports = { upload, uploadToDB ,getAllFiles,getSingleFile,updateFile};

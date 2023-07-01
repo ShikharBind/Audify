@@ -25,6 +25,8 @@ router.post("/upload",fileController.upload.single('video'), (req, res) => {
    const file = await fileController.getSingleFile(req, res);
    const audioFilePath =functions.getAudioFilePath(file.videoFilePath);
    mediaController.convertVideoToAudio(file.videoFilePath, audioFilePath);
+    file.audioFilePath= audioFilePath;
+    fileController.updateFile(req, res, file);
     mediaController.streamAudio(req, res, audioFilePath);
   })
 
