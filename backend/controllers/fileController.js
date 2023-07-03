@@ -100,7 +100,7 @@ const updateFile = (req, res, file) => {
     )
     .then((result) => {
       console.log(result);
-      // res.send(result);
+      res.send(result);
     })
     .catch((err) => {
       console.error("Update failed:", err);

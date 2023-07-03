@@ -23,11 +23,12 @@ router.post("/upload", fileController.upload.single("video"), (req, res) => {
   router.post("/convert/:id", async (req, res) => {
     console.log("in convert");
     const file = await fileController.getSingleFile(req, res);
-    const audioFilePath = functions.getAudioFilePath(file.videoFilePath);
+    if(file){const audioFilePath = functions.getAudioFilePath(file.videoFilePath);
     mediaController.convertVideoToAudio(file.videoFilePath, audioFilePath);
     file.audioFilePath = audioFilePath;
-    fileController.updateFile(req, res, file);
-    mediaController.streamAudio(req, res, audioFilePath);
+    fileController.updateFile(req, res, file);}else{
+        res.send("File not found");
+    }
   });
 
 router.get("/view-all", async (req, res) => {
@@ -37,21 +38,38 @@ router.get("/view-all", async (req, res) => {
 
 router.get("/view/:id", async (req, res) => {
   const file = await fileController.getSingleFile(req, res);
-  res.send(file);
+  if(file){res.send(file);}else{
+    res.send("File not found");
+  }
+});
+
+router.get("/play/:id", async (req, res) => {
+  const file = await fileController.getSingleFile(req, res);
+  if(file){mediaController.streamAudio(req, res, file.audioFilePath);}else{
+    res.send("File not found");
+  }
 });
 
 router.post("/delete/:id", async (req, res) => {
-  fileController.deleteFile(req, res);
+  const file = await fileController.getSingleFile(req, res);
+if(file){ if(file.videoFilePath) functions.deleteFile(file.videoFilePath);
+ if(file.audioFilePath) functions.deleteFile(file.audioFilePath);
+ fileController.deleteFile(req, res);}
+ else{
+    res.send("File not found");
+ }
 });
 
 router.get("/download/:id", async (req, res) => {
   const file = await fileController.getSingleFile(req, res);
-  res.download(file.audioFilePath, (err) => {
+  if(file){res.download(file.audioFilePath, (err) => {
     if (err) {
       console.error("Download failed:", error);
       res.status(500).send("Download failed");
     }
-  });
+  });}else{
+    res.send("File not found");
+  }
 });
 
 module.exports = router;
