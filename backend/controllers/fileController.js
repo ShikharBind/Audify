@@ -94,7 +94,9 @@ const updateFile = (req, res, file) => {
       { userID: req.currentUser.user_id, "files._id": req.params.id },
       {
         $set: {
-          "files.$": file,
+          "files.$.filename": file.filename,
+          "files.$.videoFilePath": file.videoFilePath,
+          "files.$.audioFilePath": file.audioFilePath,
         },
       }
     )
