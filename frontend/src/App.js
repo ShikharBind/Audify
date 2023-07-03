@@ -5,6 +5,9 @@ import {
   RouterProvider
 } from 'react-router-dom'
 
+import React from 'react';
+import { AccessTokenProvider } from './AccessTokenContext';
+
 import Home from './Home';
 import Signup from './signup';
 import Login from './login';
@@ -21,7 +24,9 @@ const router = createBrowserRouter(
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <AccessTokenProvider>
+      <RouterProvider router={router} />
+    </AccessTokenProvider>
   );
 }
 

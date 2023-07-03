@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState , useContext} from "react";
 import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "./firebase-config";
 import { useNavigate } from 'react-router-dom';
+import { AccessTokenContext } from './AccessTokenContext';
 
 import { Link} from "react-router-dom";
 
@@ -11,15 +12,19 @@ function Signup() {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const navigate = useNavigate();
+  const { setAccessToken } = useContext(AccessTokenContext);
 
   const register = async (event) => {
     event.preventDefault();
     try {
-      const user = await createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         registerEmail,
         registerPassword
       );
+      const user = userCredential.user;
+      const accessToken = await user.getIdToken();
+      setAccessToken(accessToken);
       console.log(user);
       navigate('/');
     } catch (error) {

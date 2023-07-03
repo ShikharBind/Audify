@@ -221,6 +221,13 @@ body {
   margin-top: 20px;
 }
 
+.upload-button:disabled,
+.convert-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.download-button,
 .upload-button,
 .convert-button {
   padding: 10px 20px;
@@ -233,6 +240,7 @@ body {
   cursor: pointer;
 }
 
+.download-button,
 .upload-button:hover,
 .convert-button:hover {
   background-color: #097c88;
