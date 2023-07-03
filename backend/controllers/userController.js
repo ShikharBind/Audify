@@ -1,12 +1,15 @@
 const users = require("../models/user");
+const functions = require("../utils/functions");
 
 const newUserData = async (decodeValue, req, res) => {
+  functions.createFolder('./uploads/'+decodeValue.user_id)
   const newUser = new users({
     name: decodeValue.email.split("@")[0],
     email: decodeValue.email,
     userID: decodeValue.user_id,
     email_verified: decodeValue.email_verified,
     auth_time: decodeValue.auth_time,
+    files:[]
   });
   try {
     console.log("here");
@@ -37,7 +40,26 @@ const updateUserData = async (decodeValue, req, res) => {
   }
 };
 
+const checkAndUpdateUser= async (req, res) => {
+   // checking if user already exists
+   const decodeValue = req.currentUser;
+  try {
+     const userExists = await users.findOne({ userID: decodeValue.user_id });
+      
+     if (userExists) {
+       updateUserData(decodeValue, req, res);
+     } else {
+       // res.send(decodeValue);
+       newUserData(decodeValue, req, res);
+     }
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
 module.exports = {
+  checkAndUpdateUser,
   newUserData,
-  updateUserData,
+  updateUserData
 };
