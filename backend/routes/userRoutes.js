@@ -65,7 +65,7 @@ router.get("/download/:id", async (req, res) => {
   if(file){res.download(file.audioFilePath, (err) => {
     if (err) {
       console.error("Download failed:", error);
-      res.status(500).send("Download failed");
+      res.send("Download failed");
     }
   });}else{
     res.send("File not found");

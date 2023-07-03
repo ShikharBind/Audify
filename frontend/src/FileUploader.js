@@ -32,10 +32,10 @@ const FileUploader = () => {
   const handleUpload = async () => {
     if (videoFile) {
       const formData = new FormData();
-      formData.append("videoFile", videoFile);
+      formData.append("video", videoFile);
 
       try {
-        const response = await fetch("http://localhost:3000/upload", {
+        const response = await fetch("http://localhost:4000/upload", {
             headers:{
                 Authorization: `Bearer ${accessToken}`,
               },  
@@ -57,7 +57,7 @@ const FileUploader = () => {
     //   const formData = new FormData();
     //   formData.append("video", videoFile);
   
-      fetch(`http://localhost:3000/convert/${id}`, {
+      fetch(`http://localhost:4000/convert/${id}`, {
         headers:{
             Authorization: `Bearer ${accessToken}`,
           },  
