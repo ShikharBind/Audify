@@ -21,10 +21,15 @@
 * {
   margin: 0;
   font-family: "Quicksand";
-  color: var(--primary-color);
+  color: #f8f8f8;
 }
 body {
-  background-color: var(--secondary-color);
+  height: 100vh;
+  width: 100%;
+  background: #360033;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #0b8793, #360033);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #0b8793, #360033); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
 }
 
 
@@ -34,7 +39,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background-color: var(--primary-color);
+  /* background-color: var(--primary-color); */
 }
 
 .navbar h1 {
@@ -92,7 +97,8 @@ body {
 .login-page {
   width: 360px;
   padding: 8% 0 0;
-  margin: auto;display: flex;
+  margin: auto;
+  display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -105,7 +111,9 @@ body {
   left: -20px;
   right: -20px;
   bottom: -20px;
-  background: var(--secondary-color);
+  background: #360033;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #0b8793, #360033);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #0b8793, #360033); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   z-index: -1;
   border-radius: 20px;
 }
@@ -113,19 +121,20 @@ body {
 .register-form {
   position: relative;
   z-index: 1;
-  background: var(--third-color);;
+  background: #ffffff2c;
   max-width: 360px;
   border-radius: 10px;
   margin: 0 auto 100px;
   padding: 40px;
   text-align: center;
-  border: 1px solid var(--xtra-color);
+  border: 1px solid #ddd;
 }
 
 .form input {
   font-family: "Quicksand", "Roboto", sans-serif;
   outline: 0;
   background: #f8f8f8;
+  color: #5f6476; /* Change the text color to black */
   width: 100%;
   border: 0;
   margin: 0 0 15px;
@@ -133,43 +142,98 @@ body {
   box-sizing: border-box;
   font-size: 14px;
   border-radius: 5px;
-  border: 1px solid var(--xtra-color);
+  border: 1px solid #ddd;
 }
 
 .form button {
   font-family: "Quicksand", "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: var(--secondary-color);
+  background: #0b8793;
   width: 100%;
   border: 0;
   padding: 15px;
-  color: var(--third-color);
+  color: #fff;
   font-size: 14px;
   transition: all 0.3s ease;
   cursor: pointer;
   border-radius: 5px;
 }
 
-
 .form button:hover,
 .form button:active,
 .form button:focus {
-  background-color: var(--primary-color);
+  background-color: #097c88;
 }
 
 .form .message {
   margin: 15px 0 0;
-  color: var(--xtra-color);
+  color: #fff;
   font-size: 15px;
 }
 
 .form .message a {
-  color: var(--secondary-color);
+  color: #0b8793;
   text-decoration: none;
 }
 
 .form h3 {
   font-size: 30px;
   margin-bottom: 20px;
+}
+
+/* video uploader css */
+.file-uploader {
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  border: 2px dashed #ddd;
+  border-radius: 5px;
+  text-align: center;
+  max-width: 600px;
+  background: #ffffff2c;  /* fallback for old browsers */
+  }
+
+.upload-label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  color: #fff;
+}
+
+.upload-icon {
+  font-size: 36px;
+}
+
+.upload-text {
+  margin-top: 10px;
+}
+
+.file-actions {
+  margin-top: 20px;
+}
+
+.upload-button,
+.convert-button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #0b8793;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.upload-button:hover,
+.convert-button:hover {
+  background-color: #097c88;
 }
