@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AccessTokenContext } from './AccessTokenContext';
+import DownloadButton from './DownloadButton';
 
 const FileUploader = () => {
+  const { accessToken } = useContext(AccessTokenContext);
   const [videoFile, setVideoFile] = useState(null);
   const [fileId, setFileId] = useState(null);
+
+  const [isConvertDisabled, setIsConvertDisabled] = useState(true);
+  const [isConverted, setIsConverted] = useState(false);
 
   const handleDrop = (event) => {
     event.preventDefault();
@@ -30,11 +36,16 @@ const FileUploader = () => {
 
       try {
         const response = await fetch("http://localhost:3000/upload", {
-          method: "POST",
-          body: formData,
+            headers:{
+                Authorization: `Bearer ${accessToken}`,
+              },  
+            method: "POST",
+            body: formData,
         });
+        console.log(accessToken);
         const data = await response.json();
         setFileId(data.id);
+        setIsConvertDisabled(false);
       } catch (error) {
         console.error("Upload failed:", error);
       }
@@ -42,23 +53,27 @@ const FileUploader = () => {
   };
 
   const handleConvert = (id) => {
-    if (videoFile) {
-      const formData = new FormData();
-      formData.append("video", videoFile);
+    // if (videoFile) {
+    //   const formData = new FormData();
+    //   formData.append("video", videoFile);
   
       fetch(`http://localhost:3000/convert/${id}`, {
+        headers:{
+            Authorization: `Bearer ${accessToken}`,
+          },  
         method: "POST",
-        body: formData,
+        // body: formData,
       })
         .then((response) => {
           // Handle successful conversion
           console.log("Conversion successful");
+          setIsConverted(true);
         })
         .catch((error) => {
           // Handle conversion error
           console.error("Conversion error:", error);
         });
-    }
+    // }
   };
 
   return (
@@ -77,12 +92,20 @@ const FileUploader = () => {
       </label>
       {videoFile && (
         <div className="file-actions">
-          <button className="upload-button" onClick={handleUpload}>
+          <button className="upload-button" onClick={handleUpload} >
             Upload
           </button>
-          <button className="convert-button" onClick={() => handleConvert(fileId)}>
-            Convert to Audio
-          </button>
+          {isConverted && fileId && <DownloadButton fileId={fileId} />}
+          { !isConverted && ( 
+            <button
+              className="convert-button"
+              onClick={() => handleConvert(fileId)}
+              disabled={isConvertDisabled || !fileId}
+            >
+              Convert to Audio
+            </button>
+          )}
+
         </div>
       )}
     </div>
