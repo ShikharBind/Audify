@@ -1,7 +1,14 @@
+import { AccessTokenContext } from './AccessTokenContext';
+import React, { useState, useContext } from "react";
+
 const DownloadButton = ({ fileId }) => {
+  const { accessToken } = useContext(AccessTokenContext);
   const handleDownload = async () => {
     try {
       const response = await fetch(`http://localhost:4000/download/${fileId}`, {
+        headers:{
+              Authorization: `Bearer ${accessToken}`,
+        },
         method: "GET",
       });
 
