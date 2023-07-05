@@ -33,9 +33,9 @@ import { Link} from "react-router-dom";
           method: "POST",
       });
       if(response.status === 200){
-        console.log("login");
+        // console.log("login");
         navigate('/');
-        console.log(user);
+        // console.log(user);
        }
       else{
         console.log("login failed!! Try again");

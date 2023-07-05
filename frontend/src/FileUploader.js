@@ -27,6 +27,10 @@ const FileUploader = () => {
     if (file.type.startsWith("video/")) {
       setVideoFile(file);
     }
+    if(isConvertDisabled === false){
+      setIsConvertDisabled(true);
+      setIsConverted(false);
+    }
   };
 
   const handleUpload = async () => {
@@ -42,7 +46,7 @@ const FileUploader = () => {
             method: "POST",
             body: formData,
         });
-        console.log(accessToken);
+        // console.log(accessToken);
         const data = await response.json();
         setFileId(data.id);
         setIsConvertDisabled(false);
@@ -53,9 +57,6 @@ const FileUploader = () => {
   };
 
   const handleConvert = (id) => {
-    // if (videoFile) {
-    //   const formData = new FormData();
-    //   formData.append("video", videoFile);
   
       fetch(`http://localhost:4000/convert/${id}`, {
         headers:{
