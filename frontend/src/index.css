@@ -240,7 +240,7 @@ body {
   cursor: pointer;
 }
 
-.download-button,
+.download-button:hover,
 .upload-button:hover,
 .convert-button:hover {
   background-color: #097c88;

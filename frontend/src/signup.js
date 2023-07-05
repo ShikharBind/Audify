@@ -25,8 +25,22 @@ function Signup() {
       const user = userCredential.user;
       const accessToken = await user.getIdToken();
       setAccessToken(accessToken);
-      console.log(user);
-      navigate('/');
+
+      const response = await fetch("http://localhost:4000/login", {
+            headers:{
+                Authorization: `Bearer ${accessToken}`,
+              },  
+            method: "POST",
+        });
+      if(response.status === 200){
+        console.log("login");
+        navigate('/');
+        console.log(user);
+      }
+      else{
+        console.log("login failed!! Try again");
+      }
+
     } catch (error) {
       console.log(error.message);
     }
