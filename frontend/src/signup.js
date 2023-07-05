@@ -64,7 +64,7 @@ function Signup() {
               }}
             />
             <button onClick={register}> Create User </button>
-            <p className="message">Already registered? <Link to="/login">login</Link></p>
+            <p className="message">Already registered? <Link to="/login">Login</Link></p>
           </form>
 
         </div>
