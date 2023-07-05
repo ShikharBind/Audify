@@ -1,3 +1,4 @@
+const { on } = require("events");
 const ffmpeg = require("fluent-ffmpeg");
 const fs = require("fs");
 
@@ -19,24 +20,21 @@ function mp3ToBase64(filePath) {
   return base64String;
 }
 
-const convertVideoToAudio = (videoFilePath, audioFilePath) => {
-  try {
-    ffmpeg(videoFilePath)
+const convertVideoToAudio = async(videoFilePath, audioFilePath) => {
+  return new Promise(async (resolve, reject) => {
+   await ffmpeg(videoFilePath)
       .output(audioFilePath)
       .noVideo()
       .audioCodec("libmp3lame")
-      .on("end", (callback) => {
+      .on("end", () => {
         console.log("Conversion complete");
+        resolve();
       })
       .on("error", (error) => {
         console.error("Error:", error);
+        res.status(400).send({ success: false, message: error });
       })
-      .run();
-    console.log("Conversion complete");
-  } catch (error) {
-    console.error("Conversion failed:", error);
-    res.status(400).send({ success: false, message: error });
-  }
+      .run()});
 };
 
 const streamAudio =(req, res, audioFilePath)=>{

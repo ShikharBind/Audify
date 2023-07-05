@@ -102,7 +102,7 @@ const updateFile = (req, res, file) => {
     )
     .then((result) => {
       console.log(result);
-      res.send(result);
+      res.status(200).send({message: "Conversion successful"});
     })
     .catch((err) => {
       console.error("Update failed:", err);
