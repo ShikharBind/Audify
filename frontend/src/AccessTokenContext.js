@@ -24,7 +24,7 @@ export const AccessTokenProvider = ({ children }) => {
 
   return (
     <AccessTokenContext.Provider
-      value={{ accessToken, updateAccessToken, clearAccessToken }}
+      value={{ accessToken,setAccessToken: updateAccessToken, clearAccessToken }}
     >
       {children}
     </AccessTokenContext.Provider>
