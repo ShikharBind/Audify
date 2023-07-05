@@ -58,6 +58,7 @@ import { Link} from "react-router-dom";
           }}
         />
         <input
+        type="password"
           placeholder="Password..."
           onChange={(event) => {
             setLoginPassword(event.target.value);
@@ -65,7 +66,7 @@ import { Link} from "react-router-dom";
         />
         <button onClick={login}>Login</button>
         <p className="message">
-          Already registered? <Link to="/signup">Create Account</Link>
+          Haven't registered yet? <Link to="/signup">Create Account</Link>
         </p>
       </form>
     </div>

@@ -57,13 +57,14 @@ function Signup() {
               }}
             />
             <input
+            type="password"
               placeholder="Password..."
               onChange={(event) => {
                 setRegisterPassword(event.target.value);
               }}
             />
             <button onClick={register}> Create User </button>
-            <p className="message">Not registered? <Link to="/login">login</Link></p>
+            <p className="message">Already registered? <Link to="/login">login</Link></p>
           </form>
 
         </div>
