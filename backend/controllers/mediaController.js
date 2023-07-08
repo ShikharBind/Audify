@@ -20,7 +20,7 @@ function mp3ToBase64(filePath) {
   return base64String;
 }
 
-const convertVideoToAudio = async(videoFilePath, audioFilePath) => {
+const convertVideoToAudio = async(videoFilePath, audioFilePath, req, res) => {
   return new Promise(async (resolve, reject) => {
    await ffmpeg(videoFilePath)
       .output(audioFilePath)
