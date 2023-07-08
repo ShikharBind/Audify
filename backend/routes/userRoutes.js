@@ -16,7 +16,10 @@ router.post("/upload", fileController.upload.single("video"), (req, res) => {
   console.log(req.file);
   console.log(req.file.path);
   console.log("uploading...");
-  fileController.uploadToDB(req, res).then((result) => {
+  const file = {
+    videoFilePath: req.file.path,
+  };
+  fileController.uploadToDB(req, res,file).then((result) => {
     res.send({ id: result });
   });
 }),
@@ -25,8 +28,8 @@ router.post("/upload", fileController.upload.single("video"), (req, res) => {
     const file = await fileController.getSingleFile(req, res);
     if (file) {
       const audioFilePath = functions.getAudioFilePath(file.videoFilePath);
-     mediaController
-        .convertVideoToAudio(file.videoFilePath, audioFilePath,req,res)
+      mediaController
+        .convertVideoToAudio(file.videoFilePath, audioFilePath, req, res)
         .then(() => {
           file.audioFilePath = audioFilePath;
           fileController.updateFile(req, res, file);
@@ -35,6 +38,22 @@ router.post("/upload", fileController.upload.single("video"), (req, res) => {
       res.send("File not found");
     }
   });
+
+router.post("/convert-url", async (req, res) => {
+  const videoFilePath = req.body.videoURL;
+  const audioFilePath =
+    `./uploads/${req.currentUser.user_id}/` +
+    functions.getAudioFilePath(Date.now().toString());
+  mediaController.convertVideoURLToAudio(videoFilePath, audioFilePath,req,res).then(()=>{
+    const file = {
+      videoFilePath: videoFilePath,
+      audioFilePath: audioFilePath,
+    };
+    fileController.uploadToDB(req, res,file).then((result) => {
+      res.send({ id: result });
+    });
+  })
+});
 
 router.get("/view-all", async (req, res) => {
   const files = await fileController.getAllFiles(req, res);

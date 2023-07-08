@@ -30,10 +30,7 @@ const upload = multer({
   },
 });
 
-const uploadToDB = async (req, res) => {
-  const file = {
-    videoFilePath: req.file.path,
-  };
+const uploadToDB = async (req, res,file) => {
   const filter = { userID: req.currentUser.user_id };
   var response;
   try {
@@ -52,6 +49,7 @@ const uploadToDB = async (req, res) => {
     return response;
   } catch (error) {
     console.error("Error saving user:", error);
+    res.status(400).send({ success: false, message: error });
   }
 };
 

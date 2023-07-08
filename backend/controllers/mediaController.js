@@ -1,6 +1,7 @@
 const { on } = require("events");
 const ffmpeg = require("fluent-ffmpeg");
 const fs = require("fs");
+const ytdl = require('ytdl-core');
 
 function base64ToMp3(base64String, outputFilePath) {
   const base64Data = base64String.replace(/^data:audio\/mp3;base64,/, "");
@@ -37,6 +38,34 @@ const convertVideoToAudio = async(videoFilePath, audioFilePath, req, res) => {
       .run()});
 };
 
+async function convertVideoURLToAudio(videoUrl, outputPath, req,res) {
+
+  return new Promise(function(resolve, reject) {
+    try {
+      const videoReadableStream = ytdl(videoUrl, { quality: 'highestaudio' });
+      const outputStream = fs.createWriteStream(outputPath);
+  
+      ffmpeg(videoReadableStream)
+        .output(outputStream)
+        .noVideo()
+        .format('mp3')
+        .on('end', () => {
+          console.log('Conversion complete!');
+          resolve();
+        })
+        .on('error', (err) => { 
+          res.status(400).send({ success: false, message: error });
+          console.error('Error converting video:', err);
+        })
+        .run();
+    } catch (error) {
+      console.error('Error downloading video:', error);
+      res.status(400).send({ success: false, message: `Error processing video: ${error}`});
+    }
+  })
+  
+}
+
 const streamAudio =(req, res, audioFilePath)=>{
  try {
   console.log("playing audio"+audioFilePath);
@@ -54,4 +83,4 @@ const streamAudio =(req, res, audioFilePath)=>{
  }
 }
 
-module.exports = { base64ToMp3, mp3ToBase64, convertVideoToAudio, streamAudio };
+module.exports = { base64ToMp3, mp3ToBase64, convertVideoToAudio,convertVideoURLToAudio, streamAudio };
