@@ -189,8 +189,8 @@ body {
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
-  border: 2px dashed #ddd;
-  border-radius: 5px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
   text-align: center;
   max-width: 600px;
   background: #ffffff1f;  /* fallback for old browsers */
