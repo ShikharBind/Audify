@@ -1,0 +1,51 @@
+.url-converter {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.url-converter-container {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  background: #ffffff1f;
+  padding: 20px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+}
+
+.url-converter input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #4e4e4e;
+}
+
+.url-converter input[type="text"]::placeholder {
+  color: #565656;
+}
+
+.url-converter button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #0b8793;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.url-converter button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.url-converter button:hover:enabled {
+  background-color: #097c88;
+}

@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { AccessTokenContext } from './AccessTokenContext';
+
 import DownloadButton from './DownloadButton';
+import ConvertButton from './ConvertButton';
 
 const FileUploader = () => {
   const { accessToken } = useContext(AccessTokenContext);
@@ -56,27 +58,6 @@ const FileUploader = () => {
     }
   };
 
-  const handleConvert = (id) => {
-  
-      fetch(`http://localhost:4000/convert/${id}`, {
-        headers:{
-            Authorization: `Bearer ${accessToken}`,
-          },  
-        method: "POST",
-        // body: formData,
-      })
-        .then((response) => {
-          // Handle successful conversion
-          console.log("Conversion successful");
-          setIsConverted(true);
-        })
-        .catch((error) => {
-          // Handle conversion error
-          console.error("Conversion error:", error);
-        });
-    // }
-  };
-
   return (
     <div className="file-uploader" onDrop={handleDrop} onDragOver={handleDragOver}>
       <label htmlFor="upload-input" className="upload-label">
@@ -97,14 +78,8 @@ const FileUploader = () => {
             Upload
           </button>
           {isConverted && fileId && <DownloadButton fileId={fileId} />}
-          { !isConverted && ( 
-            <button
-              className="convert-button"
-              onClick={() => handleConvert(fileId)}
-              disabled={isConvertDisabled || !fileId}
-            >
-              Convert to Audio
-            </button>
+          {!isConverted && (
+            <ConvertButton fileId={fileId} setConverted={setIsConverted} />
           )}
 
         </div>
