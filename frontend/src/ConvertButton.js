@@ -15,11 +15,13 @@ const ConvertButton = ({ fileId, isConvertDisabled, setConverted }) => {
         method: "POST",
         body: JSON.stringify({ videoURL: fileId }),
       })
-        .then((response) => {
+        .then(async (response) => {
           if (response.ok) {
             // Handle successful conversion
+            const data = await response.json();
+            console.log(data.id)
             console.log("URL Conversion successful");
-            setConverted(true);
+            setConverted(data.id);
           } else {
             // Handle conversion error
             console.error("URL Conversion error:", response.status);
