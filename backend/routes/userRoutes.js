@@ -19,7 +19,7 @@ router.post("/upload", fileController.upload.single("video"), (req, res) => {
   const file = {
     videoFilePath: req.file.path,
   };
-  fileController.uploadToDB(req, res,file).then((result) => {
+  fileController.uploadToDB(req, res, file).then((result) => {
     res.send({ id: result });
   });
 }),
@@ -44,15 +44,17 @@ router.post("/convert-url", async (req, res) => {
   const audioFilePath =
     `./uploads/${req.currentUser.user_id}/` +
     functions.getAudioFilePath(Date.now().toString());
-  mediaController.convertVideoURLToAudio(videoFilePath, audioFilePath,req,res).then(()=>{
-    const file = {
-      videoFilePath: videoFilePath,
-      audioFilePath: audioFilePath,
-    };
-    fileController.uploadToDB(req, res,file).then((result) => {
-      res.send({ id: result });
+  mediaController
+    .convertVideoURLToAudio(videoFilePath, audioFilePath, req, res)
+    .then(() => {
+      const file = {
+        videoFilePath: videoFilePath,
+        audioFilePath: audioFilePath,
+      };
+      fileController.uploadToDB(req, res, file).then((result) => {
+        res.send({ id: result });
+      });
     });
-  })
 });
 
 router.get("/view-all", async (req, res) => {
