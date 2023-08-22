@@ -37,6 +37,7 @@ const searchYouTube = async (searchTerm) => {
     return link;
   } catch (error) {
     console.error("Error searching YouTube:", error);
+    res.status(400).send({ success: false, message: error });
   }
 };
 
@@ -60,7 +61,7 @@ const getToken = async () => {
   return response.data.access_token;
 };
 
-const getLinks = (playlistLink) => {
+const spotifyLinkToZip = (playlistLink, req, res) => {
   getToken()
     .then((accessToken) => {
       console.log(`Access Token: ${accessToken}`);
@@ -83,10 +84,11 @@ const getLinks = (playlistLink) => {
           console.log("Total Tracks:", playlist.tracks.total);
           // fs.mkdir(`./uploads/${req.currentUser.user_id}/`)
           datenow = Date.now();
-          folderName = `./uploads/${playlist.name}${datenow}/`;
+          folderName = `./uploads/${req.currentUser.user_id}/${playlist.name}${datenow}/`;
           fs.mkdir(folderName, (err) => {
             if (err) {
               console.error("Error creating directory:", err);
+              res.status(400).send({ success: false, message: err });
             } else {
               console.log("Directory created successfully");
             }
@@ -126,12 +128,13 @@ const getLinks = (playlistLink) => {
           };
         } catch (error) {
           console.error("Error fetching playlist details:", error);
+          res.status(400).send({ success: false, message: error });
         }
       };
       getPlaylistDetails().then((result) => {
         const folderToZip = result.folderName; // Replace with the actual path of the folder you want to zip
         const zipFileName = `${result.playlistName}.zip`; // Replace with the desired name for the ZIP file
-        const outputDirectory = "./uploads/"; // Replace with the desired output directory
+        const outputDirectory = `./uploads/${req.currentUser.user_id}/`; // Replace with the desired output directory
 
         const outputPath = path.join(outputDirectory, zipFileName);
 
@@ -148,15 +151,18 @@ const getLinks = (playlistLink) => {
 
         output.on("close", () => {
           console.log(`ZIP file created and stored in: ${outputPath}`);
+          res.send({ file: outputDirectory + zipFileName });
         });
 
         archive.on("error", (err) => {
           console.error("Error creating ZIP file:", err);
+          res.status(400).send({ success: false, message: err });
         });
       });
     })
     .catch((error) => {
       console.error("Error getting access token:", error);
+      res.status(400).send({ success: false, message: error });
     });
 };
-module.exports = { getLinks };
+module.exports = { spotifyLinkToZip };

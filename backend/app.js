@@ -25,9 +25,9 @@ const functions = require("./utils/functions");
 
 const PORT = process.env.PORT || 3000;
 connectDB();
-spotifyYtController.getLinks(
-  "https://open.spotify.com/playlist/2RODZc2BMf6nLbmd8jYxWG?si=af8fe3b7d54f4f00"
-);
+// spotifyYtController.spotifyLinkToZip(
+//   "https://open.spotify.com/playlist/615g8yBEbeiIGDRRAfRZ95?si=905510e6b6714eac"
+// );
 app.use(cors({ origin: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

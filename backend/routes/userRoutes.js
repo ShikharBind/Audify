@@ -1,8 +1,12 @@
 const router = require("express").Router();
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
 const userController = require("../controllers/userController");
 const fileController = require("../controllers/fileController");
 const mediaController = require("../controllers/mediaController");
 const functions = require("../utils/functions");
+const spotifyYtController = require("../controllers/spotifyYtController");
 // router.get('/:id',(req, res) => {
 //     console.log(req.params);
 //     mediaController.streamAudio(req, res,'./files/file_example_MP3_1MG.mp3');
@@ -103,6 +107,28 @@ router.get("/download/:id", async (req, res) => {
   } else {
     res.send("File not found");
   }
+});
+
+router.get("/convert-playlist", async (req, res) => {
+  playlistURL = req.body.playlistURL;
+  spotifyYtController.spotifyLinkToZip(playlistURL, req, res);
+});
+
+router.get("/download-playlist", async (req, res) => {
+  console.log(req.body.file);
+  zipFilePath = req.body.file;
+  parts = zipFilePath.split("/");
+  console.log(parts[parts.length - 1]);
+  res.setHeader("Content-Type", "application/zip");
+
+  res.download(zipFilePath, path.basename(zipFilePath), (err) => {
+    if (err) {
+      console.error("Error sending ZIP file:", err);
+      res.send("Download failed");
+    } else {
+      console.log("ZIP file sent successfully.");
+    }
+  });
 });
 
 module.exports = router;
