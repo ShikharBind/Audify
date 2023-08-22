@@ -54,12 +54,13 @@ const getToken = async () => {
   return response.data.access_token;
 };
 
-const getLinks = () => {
+const getLinks = (playlistLink) => {
   getToken()
     .then((accessToken) => {
       console.log(`Access Token: ${accessToken}`);
       const ACCESS_TOKEN = accessToken;
-      const PLAYLIST_ID = "4fxCUAyXc9TeZ0mb6Nnm9P?si=a61f2591a4a14226";
+      parts = playlistLink.split("/");
+      const PLAYLIST_ID = parts[parts.length - 1];
       const getPlaylistDetails = async () => {
         try {
           const response = await axios.get(
