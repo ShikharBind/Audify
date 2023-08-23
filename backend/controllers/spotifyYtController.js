@@ -29,12 +29,8 @@ const searchYouTube = async (searchTerm) => {
     );
 
     const videos = response.data.items;
-    videos.forEach((video, index) => {
-      const youtubeLink = `https://www.youtube.com/watch?v=${video.id.videoId}`;
-      console.log(youtubeLink);
-      link = youtubeLink;
-    });
-    return link;
+    const youtubeLink = `https://www.youtube.com/watch?v=${videos[0].id.videoId}`;
+    return youtubeLink;
   } catch (error) {
     console.error("Error searching YouTube:", error);
     res.status(400).send({ success: false, message: error });
@@ -93,35 +89,30 @@ const spotifyLinkToZip = (playlistLink, req, res) => {
               console.log("Directory created successfully");
             }
           });
-          const tracks = {};
-          playlist.tracks.items.forEach((item, index) => {
+          var tracks = {};
+          const promises = playlist.tracks.items.map(async (item, i) => {
             const track = item.track;
-            trackname = `${track.name} - ${track.artists[0].name}`;
-            // link = `https://www.youtube.com/watch?v=${trackname}`;
-            link =
-              "https://www.youtube.com/watch?v=JtPbk7WvHAQ&ab_channel=editorfriendly";
-            tracks[`${trackname}`] = link;
+            const name = `${track.name} - ${track.artists[0].name}`;
+            const characters = name.split("");
+            const trackname = characters
+              .filter((char) => char !== "/")
+              .join("");
+
+            console.log(trackname);
+            const link = await searchYouTube(trackname);
+            tracks[trackname] = link;
+            const videoFilePath = tracks[trackname];
+            const audioFilePath = `${folderName}${
+              i + 1
+            }. ${functions.getAudioFilePath(trackname)}`;
+            await mediaController.convertVideoURLToAudio(
+              videoFilePath,
+              audioFilePath
+            );
           });
+
+          await Promise.all(promises);
           console.log(tracks);
-          var i = 1;
-          for (var v in tracks) {
-            console.log(tracks[v]);
-            const videoFilePath = tracks[v];
-            const audioFilePath =
-              folderName + i + ". " + functions.getAudioFilePath(v);
-            await mediaController
-              .convertVideoURLToAudio(videoFilePath, audioFilePath)
-              .then(() => {
-                //   const file = {
-                //     videoFilePath: videoFilePath,
-                //     audioFilePath: audioFilePath,
-                //   };
-                //   fileController.uploadToDB(req, res, file).then((result) => {
-                //     res.send({ id: result });
-                //   });
-              });
-            i++;
-          }
           return {
             folderName: folderName,
             playlistName: playlist.name + datenow,
@@ -132,28 +123,21 @@ const spotifyLinkToZip = (playlistLink, req, res) => {
         }
       };
       getPlaylistDetails().then((result) => {
-        const folderToZip = result.folderName; // Replace with the actual path of the folder you want to zip
-        const zipFileName = `${result.playlistName}.zip`; // Replace with the desired name for the ZIP file
-        const outputDirectory = `./uploads/${req.currentUser.user_id}/`; // Replace with the desired output directory
-
+        const folderToZip = result.folderName;
+        const zipFileName = `${result.playlistName}.zip`;
+        const outputDirectory = `./uploads/${req.currentUser.user_id}/`;
         const outputPath = path.join(outputDirectory, zipFileName);
-
         const output = fs.createWriteStream(outputPath);
         const archive = archiver("zip", {
-          zlib: { level: 9 }, // Compression level (0-9)
+          zlib: { level: 9 },
         });
-
         archive.pipe(output);
-
-        archive.directory(folderToZip, false); // Add the entire folder to the archive
-
+        archive.directory(folderToZip, false);
         archive.finalize();
-
         output.on("close", () => {
           console.log(`ZIP file created and stored in: ${outputPath}`);
           res.send({ file: outputDirectory + zipFileName });
         });
-
         archive.on("error", (err) => {
           console.error("Error creating ZIP file:", err);
           res.status(400).send({ success: false, message: err });
