@@ -9,7 +9,8 @@ const fs = require("fs");
 const ffmpeg = require("fluent-ffmpeg");
 const path = require("path");
 const multer = require("multer");
-const ytdl = require('ytdl-core');
+const ytdl = require("ytdl-core");
+const axios = require("axios");
 
 const app = express();
 const connectDB = require("./database/db");
@@ -18,12 +19,15 @@ const mediaController = require("./controllers/mediaController");
 const fileController = require("./controllers/fileController");
 const authController = require("./controllers/authController");
 const userController = require("./controllers/userController");
+const spotifyYtController = require("./controllers/spotifyYtController");
 
-const functions = require('./utils/functions');
+const functions = require("./utils/functions");
 
 const PORT = process.env.PORT || 3000;
 connectDB();
-
+// spotifyYtController.spotifyLinkToZip(
+//   "https://open.spotify.com/playlist/615g8yBEbeiIGDRRAfRZ95?si=905510e6b6714eac"
+// );
 app.use(cors({ origin: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

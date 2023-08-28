@@ -1,8 +1,12 @@
 const router = require("express").Router();
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
 const userController = require("../controllers/userController");
 const fileController = require("../controllers/fileController");
 const mediaController = require("../controllers/mediaController");
 const functions = require("../utils/functions");
+const spotifyYtController = require("../controllers/spotifyYtController");
 // router.get('/:id',(req, res) => {
 //     console.log(req.params);
 //     mediaController.streamAudio(req, res,'./files/file_example_MP3_1MG.mp3');
@@ -19,7 +23,7 @@ router.post("/upload", fileController.upload.single("video"), (req, res) => {
   const file = {
     videoFilePath: req.file.path,
   };
-  fileController.uploadToDB(req, res,file).then((result) => {
+  fileController.uploadToDB(req, res, file).then((result) => {
     res.send({ id: result });
   });
 }),
@@ -44,15 +48,17 @@ router.post("/convert-url", async (req, res) => {
   const audioFilePath =
     `./uploads/${req.currentUser.user_id}/` +
     functions.getAudioFilePath(Date.now().toString());
-  mediaController.convertVideoURLToAudio(videoFilePath, audioFilePath,req,res).then(()=>{
-    const file = {
-      videoFilePath: videoFilePath,
-      audioFilePath: audioFilePath,
-    };
-    fileController.uploadToDB(req, res,file).then((result) => {
-      res.send({ id: result });
+  mediaController
+    .convertVideoURLToAudio(videoFilePath, audioFilePath, req, res)
+    .then(() => {
+      const file = {
+        videoFilePath: videoFilePath,
+        audioFilePath: audioFilePath,
+      };
+      fileController.uploadToDB(req, res, file).then((result) => {
+        res.send({ id: result });
+      });
     });
-  })
 });
 
 router.get("/view-all", async (req, res) => {
@@ -101,6 +107,28 @@ router.get("/download/:id", async (req, res) => {
   } else {
     res.send("File not found");
   }
+});
+
+router.get("/convert-playlist", async (req, res) => {
+  playlistURL = req.body.playlistURL;
+  spotifyYtController.spotifyLinkToZip(playlistURL, req, res);
+});
+
+router.get("/download-playlist", async (req, res) => {
+  console.log(req.body.file);
+  zipFilePath = req.body.file;
+  parts = zipFilePath.split("/");
+  console.log(parts[parts.length - 1]);
+  res.setHeader("Content-Type", "application/zip");
+
+  res.download(zipFilePath, path.basename(zipFilePath), (err) => {
+    if (err) {
+      console.error("Error sending ZIP file:", err);
+      res.send("Download failed");
+    } else {
+      console.log("ZIP file sent successfully.");
+    }
+  });
 });
 
 module.exports = router;
